@@ -52,10 +52,12 @@
       window.location.href = APPSHEET_URL;
 
     } catch (err) {
-      document.body.innerHTML =
-        "<p style='color:red'>เกิดข้อผิดพลาด: " +
-        JSON.stringify(err) + "</p>";
-    }
+  document.body.innerHTML =
+    "<p style='color:red'>" +
+    "เกิดข้อผิดพลาด<br>" +
+    (err && err.message ? err.message : "CORS หรือ Fetch error") +
+    "</p>";
+}
   })();
 </script>
 
