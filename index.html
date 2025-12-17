@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Login with LINE</title>
-
-  <!-- LIFF SDK -->
+  <!-- LIFF SDK v2 -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
@@ -12,52 +11,44 @@
 <h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
 
 <script>
-  // 1️⃣ LIFF ID จาก LINE Developers
   const LIFF_ID = "2008686694-bLB6mwvm";
-
-  // 2️⃣ Google Apps Script Web App (API สำหรับบันทึกลง Google Sheet)
   const GAS_API_URL =
     "https://script.google.com/macros/s/AKfycbwkoEmbiMdV0alM9gYFsNrijGYxBn2zvVPNqK2cz88T2ZFj24bPTHxP4vxU6Cbiv546/exec";
-
-  // 3️⃣ AppSheet URL (ของคุณ)
   const APPSHEET_URL =
     "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
 
   (async () => {
     try {
-      // เริ่มต้น LIFF
-      await liff.init({ liffId: LIFF_ID });
+      if (typeof liff === "undefined") {
+        document.body.innerHTML =
+          "<p style='color:red'>LIFF SDK ไม่ถูกโหลด กรุณาเปิดผ่านแอป LINE</p>";
+        return;
+      }
 
-      // ถ้ายังไม่ login LINE → ให้ LINE login
+      await liff.init({ liffId: LIFF_ID });
+      await liff.ready;
+
       if (!liff.isLoggedIn()) {
         liff.login();
         return;
       }
 
-      // ดึงข้อมูลผู้ใช้ LINE
       const profile = await liff.getProfile();
 
-      // ส่ง lineUserId ไปบันทึกใน Google Sheet
       await fetch(GAS_API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          lineUserId: profile.userId
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lineUserId: profile.userId })
       });
 
-      // พาเข้า AppSheet
       window.location.href = APPSHEET_URL;
 
     } catch (err) {
-  document.body.innerHTML =
-    "<p style='color:red'>" +
-    "เกิดข้อผิดพลาด<br>" +
-    (err && err.message ? err.message : "CORS หรือ Fetch error") +
-    "</p>";
-}
+      document.body.innerHTML =
+        "<p style='color:red'>เกิดข้อผิดพลาด<br>" +
+        (err && err.message ? err.message : "CORS หรือ Fetch error") +
+        "</p>";
+    }
   })();
 </script>
 
