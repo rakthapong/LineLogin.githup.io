@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Login with LINE</title>
 
-  <!-- โหลด LIFF SDK -->
+  <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/sdk.js"></script>
 </head>
 <body>
@@ -13,37 +13,49 @@
 
 <script>
   // 1️⃣ LIFF ID จาก LINE Developers
-  const LIFF_ID = "ใส่_LIFF_ID_ตรงนี้";
+  const LIFF_ID = "2008686694-bLB6mwvm";
 
-  // 2️⃣ URL ของ Google Apps Script (doPost)
-  const GAS_API_URL = "ใส่_GAS_API_URL_ตรงนี้";
+  // 2️⃣ Google Apps Script Web App (API สำหรับบันทึกลง Google Sheet)
+  const GAS_API_URL =
+    "https://script.google.com/macros/s/AKfycbxA8g_Oxu6MWyemvVVOfofZBuRu1m4jCmqrzOGEKt-eAMwWnV2Htoz01Y9U2wmfdOVF/exec";
 
-  // 3️⃣ URL แอป AppSheet ของคุณ
-  const APPSHEET_URL = "https://www.appsheet.com/start/APP_ID";
+  // 3️⃣ AppSheet URL (ของคุณ)
+  const APPSHEET_URL =
+    "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
 
   (async () => {
-    // เริ่มต้น LIFF
-    await liff.init({ liffId: LIFF_ID });
+    try {
+      // เริ่มต้น LIFF
+      await liff.init({ liffId: LIFF_ID });
 
-    // ถ้ายังไม่ login LINE → ให้ LINE login
-    if (!liff.isLoggedIn()) {
-      liff.login();
-      return;
+      // ถ้ายังไม่ login LINE → ให้ LINE login
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+
+      // ดึงข้อมูลผู้ใช้ LINE
+      const profile = await liff.getProfile();
+
+      // ส่ง lineUserId ไปบันทึกใน Google Sheet
+      await fetch(GAS_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          lineUserId: profile.userId
+        })
+      });
+
+      // พาเข้า AppSheet
+      window.location.href = APPSHEET_URL;
+
+    } catch (err) {
+      document.body.innerHTML =
+        "<p style='color:red'>เกิดข้อผิดพลาด: " +
+        JSON.stringify(err) + "</p>";
     }
-
-    // ดึงข้อมูลผู้ใช้ LINE
-    const profile = await liff.getProfile();
-
-    // ส่ง lineUserId ไปเก็บใน Google Sheet
-    await fetch(GAS_API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        lineUserId: profile.userId
-      })
-    });
-
-    // พาเข้า AppSheet
-    window.location.href = APPSHEET_URL;
   })();
 </script>
 
