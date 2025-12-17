@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>Login with LINE</title>
-  <!-- LIFF SDK v2 -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
@@ -13,20 +12,13 @@
 <script>
   const LIFF_ID = "2008686694-bLB6mwvm";
   const GAS_API_URL =
-    "https://script.google.com/macros/s/AKfycbxDrn1PrY57C2MCiRIF8dvVzXjTdD0BiVoW-qNddV4-WxTIJbbHCw6KFGC9UGoUn3nD/exec";
+    "https://script.google.com/macros/s/AKfycbx7I5C11GK0YqsgK0qfpjp-hhCUv_oKcvn6hHFfTbIjoIC_cEMqbKOveaSWPU4rZqGM/exec";
   const APPSHEET_URL =
     "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
 
   (async () => {
     try {
-      if (typeof liff === "undefined") {
-        document.body.innerHTML =
-          "<p style='color:red'>LIFF SDK ไม่ถูกโหลด กรุณาเปิดผ่านแอป LINE</p>";
-        return;
-      }
-
       await liff.init({ liffId: LIFF_ID });
-      await liff.ready;
 
       if (!liff.isLoggedIn()) {
         liff.login();
@@ -35,19 +27,21 @@
 
       const profile = await liff.getProfile();
 
-      await fetch(GAS_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lineUserId: profile.userId })
-      });
+      // ✅ ส่งข้อมูลแบบไม่ติด CORS
+      const img = new Image();
+      img.src =
+        GAS_API_URL +
+        "?lineUserId=" + encodeURIComponent(profile.userId) +
+        "&t=" + Date.now();
 
-      window.location.href = APPSHEET_URL;
+      // รอแป๊บเดียวให้ GAS ทำงาน
+      setTimeout(() => {
+        window.location.href = APPSHEET_URL;
+      }, 800);
 
-    } catch (err) {
+    } catch (e) {
       document.body.innerHTML =
-        "<p style='color:red'>เกิดข้อผิดพลาด<br>" +
-        (err && err.message ? err.message : "CORS หรือ Fetch error") +
-        "</p>";
+        "<p style='color:red'>เกิดข้อผิดพลาด</p>";
     }
   })();
 </script>
