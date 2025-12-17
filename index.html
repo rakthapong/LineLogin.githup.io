@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login with LINE</title>
+
+  <!-- โหลด LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/sdk.js"></script>
+</head>
+<body>
+
+<h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
+
+<script>
+  // 1️⃣ LIFF ID จาก LINE Developers
+  const LIFF_ID = "ใส่_LIFF_ID_ตรงนี้";
+
+  // 2️⃣ URL ของ Google Apps Script (doPost)
+  const GAS_API_URL = "ใส่_GAS_API_URL_ตรงนี้";
+
+  // 3️⃣ URL แอป AppSheet ของคุณ
+  const APPSHEET_URL = "https://www.appsheet.com/start/APP_ID";
+
+  (async () => {
+    // เริ่มต้น LIFF
+    await liff.init({ liffId: LIFF_ID });
+
+    // ถ้ายังไม่ login LINE → ให้ LINE login
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
+    }
+
+    // ดึงข้อมูลผู้ใช้ LINE
+    const profile = await liff.getProfile();
+
+    // ส่ง lineUserId ไปเก็บใน Google Sheet
+    await fetch(GAS_API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        lineUserId: profile.userId
+      })
+    });
+
+    // พาเข้า AppSheet
+    window.location.href = APPSHEET_URL;
+  })();
+</script>
+
+</body>
+</html>
