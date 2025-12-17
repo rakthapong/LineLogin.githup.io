@@ -1,45 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
   <meta charset="utf-8">
   <title>Login with LINE</title>
+
+  <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 80px;
+    }
+  </style>
 </head>
 <body>
 
-<h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
+  <h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
 
-<script>
-  const LIFF_ID = "2008686694-bLB6mwvm";
-  const GAS_API_URL =
-    "https://script.google.com/macros/s/AKfycby3DTgrNQsOHfvHVlzYM32ceAy1eh8DgSuxwjEDwV48VJSRmqSz1i-GRb9HUb-BwxzY/exec";
-  const APPSHEET_URL =
-    "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
+  <script>
+    // ===============================
+    // 🔧 CONFIG (แก้เฉพาะ 3 ค่านี้)
+    // ===============================
+    const LIFF_ID = "2008686694-bLB6mwvm";
 
-  (async () => {
-    await liff.init({ liffId: LIFF_ID });
+    const GAS_API_URL =
+      "https://script.google.com/macros/s/AKfycby3DTgrNQsOHfvHVlzYM32ceAy1eh8DgSuxwjEDwV48VJSRmqSz1i-GRb9HUb-BwxzY/exec";
 
-    if (!liff.isLoggedIn()) {
-      liff.login();
-      return;
-    }
+    const APPSHEET_URL =
+      "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
+    // ===============================
 
-    const profile = await liff.getProfile();
+    (async () => {
+      try {
+        // เริ่ม LIFF
+        await liff.init({ liffId: LIFF_ID });
 
-    // ยิง GAS (ไม่สนผลลัพธ์)
-    const img = new Image();
-    img.src =
-      GAS_API_URL +
-      "?lineUserId=" + encodeURIComponent(profile.userId) +
-      "&t=" + Date.now();
+        // ถ้ายังไม่ login → ให้ LINE login ก่อน
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
 
-    // เด้งเข้า AppSheet ทันที
-    setTimeout(() => {
-      window.location.replace(APPSHEET_URL);
-    }, 500);
-  })();
-</script>
+        // ดึงข้อมูลผู้ใช้ LINE
+        const profile = await liff.getProfile();
 
+        // 🔥 ส่ง lineUserId ไป GAS (ไม่รอผลลัพธ์ ป้องกัน CORS)
+        const img = new Image();
+        img.src =
+          GAS_API_URL +
+          "?lineUserId=" + encodeURIComponent(profile.userId) +
+          "&t=" + Date.now();
+
+        // เด้งเข้า AppSheet
+        setTimeout(() => {
+          window.location.replace(APPSHEET_URL);
+        }, 500);
+
+      } catch (err) {
+        // กรณีผิดพลาดจริง ๆ (เช่น LIFF ID ผิด)
+        document.body.innerHTML =
+          "<p style='color:red'>เกิดข้อผิดพลาดในการเข้าสู่ระบบ</p>";
+        console.error(err);
+      }
+    })();
+  </script>
 
 </body>
 </html>
