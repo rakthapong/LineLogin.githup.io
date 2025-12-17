@@ -17,37 +17,29 @@
     "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
 
   (async () => {
-    try {
-      await liff.init({ liffId: LIFF_ID });
+    await liff.init({ liffId: LIFF_ID });
 
-      if (!liff.isLoggedIn()) {
-        liff.login();
-        return;
-      }
-
-      const profile = await liff.getProfile();
-
-      const img = new Image();
-      img.onload = () => {
-        window.location.href = APPSHEET_URL;
-      };
-
-      img.onerror = () => {
-        document.body.innerHTML =
-          "<p style='color:red'>ส่งข้อมูลไป Google Sheet ไม่สำเร็จ</p>";
-      };
-
-      img.src =
-        GAS_API_URL +
-        "?lineUserId=" + encodeURIComponent(profile.userId) +
-        "&t=" + Date.now();
-
-    } catch (e) {
-      document.body.innerHTML =
-        "<p style='color:red'>เกิดข้อผิดพลาดจาก LINE Login</p>";
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
     }
+
+    const profile = await liff.getProfile();
+
+    // ยิง GAS (ไม่สนผลลัพธ์)
+    const img = new Image();
+    img.src =
+      GAS_API_URL +
+      "?lineUserId=" + encodeURIComponent(profile.userId) +
+      "&t=" + Date.now();
+
+    // เด้งเข้า AppSheet ทันที
+    setTimeout(() => {
+      window.location.replace(APPSHEET_URL);
+    }, 500);
   })();
 </script>
+
 
 </body>
 </html>
