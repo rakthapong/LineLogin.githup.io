@@ -34,32 +34,32 @@
 
     (async () => {
       try {
-        // เริ่ม LIFF
         await liff.init({ liffId: LIFF_ID });
 
-        // ถ้ายังไม่ login → ให้ LINE login ก่อน
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
         }
 
-        // ดึงข้อมูลผู้ใช้ LINE
         const profile = await liff.getProfile();
 
-        // 🔥 ส่ง lineUserId ไป GAS (ไม่รอผลลัพธ์ ป้องกัน CORS)
+        // ส่ง lineUserId ไป Google Sheet (GAS)
         const img = new Image();
         img.src =
           GAS_API_URL +
           "?lineUserId=" + encodeURIComponent(profile.userId) +
           "&t=" + Date.now();
 
-        // เด้งเข้า AppSheet
+        // ✅ ส่ง lineUserId เข้า AppSheet User Settings
         setTimeout(() => {
-          window.location.replace(APPSHEET_URL);
-        }, 500);
+          window.location.replace(
+            APPSHEET_URL +
+            "?appUserSetting_lineUserId=" +
+            encodeURIComponent(profile.userId)
+          );
+        }, 600);
 
       } catch (err) {
-        // กรณีผิดพลาดจริง ๆ (เช่น LIFF ID ผิด)
         document.body.innerHTML =
           "<p style='color:red'>เกิดข้อผิดพลาดในการเข้าสู่ระบบ</p>";
         console.error(err);
