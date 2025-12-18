@@ -34,10 +34,11 @@ const APPSHEET_URL =
 
   // 🔥 login AppSheet ด้วย username/password อัตโนมัติ
   setTimeout(() => {
-    window.location.href =
-      APPSHEET_URL +
-      "?username=" + encodeURIComponent(uid) +
-      "&password=auto";
+    window.location.replace(
+  "https://www.appsheet.com/start/APP_ID" +
+  "?lineUserId=" + encodeURIComponent(profile.userId)
+);
+
   }, 800);
 })();
 </script>
