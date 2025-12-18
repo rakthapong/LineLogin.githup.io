@@ -18,28 +18,32 @@ const APPSHEET_URL =
   "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
 
 (async () => {
-  await liff.init({ liffId: LIFF_ID });
+  try {
+    await liff.init({ liffId: LIFF_ID });
 
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
+    }
+
+    const profile = await liff.getProfile();
+    const uid = profile.userId;
+
+    // ส่ง lineUserId ไปบันทึกใน Google Sheet ผ่าน GAS
+    const img = new Image();
+    img.src = GAS_API_URL + "?lineUserId=" + encodeURIComponent(uid) + "&t=" + Date.now();
+
+    // เปิด AppSheet (พร้อมส่ง lineUserId ไปให้ใช้ใน UserSettings)
+    setTimeout(() => {
+      window.location.replace(
+        APPSHEET_URL + "?lineUserId=" + encodeURIComponent(uid)
+      );
+    }, 800);
+
+  } catch (err) {
+    document.body.innerHTML = "<p style='color:red'>เกิดข้อผิดพลาด</p>";
+    console.error(err);
   }
-
-  const profile = await liff.getProfile();
-  const uid = profile.userId;
-
-  // ส่งไปบันทึกที่ GAS
-  const img = new Image();
-  img.src = GAS_API_URL + "?lineUserId=" + uid + "&t=" + Date.now();
-
-  // 🔥 login AppSheet ด้วย username/password อัตโนมัติ
-  setTimeout(() => {
-    window.location.replace(
-  "https://www.appsheet.com/start/APP_ID" +
-  "?lineUserId=" + encodeURIComponent(profile.userId)
-);
-
-  }, 800);
 })();
 </script>
 
