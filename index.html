@@ -10,9 +10,8 @@
 
 <script>
 const LIFF_ID = "2008686694-bLB6mwvm";
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxlIsge_8P3FuACJxHxBZHefCjtoZYhcaWwW0vW_UviBzTQpR_hAVgnlCD-U2AxVN6F/exec";
-const APPSHEET_URL =
-  "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw0Q6cwuGBfRMsH6HL4wrw8oi_Tga6QBf6OlVzWZ-SgKfd-_g4DG2cFYn8-Zi-UgVBa/exec";
+const APPSHEET_URL = "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
 
 (async () => {
   await liff.init({ liffId: LIFF_ID });
@@ -23,20 +22,20 @@ const APPSHEET_URL =
   }
 
   const profile = await liff.getProfile();
-  const uid = profile.userId;
 
-  // ยิงไปบันทึกที่ GAS
   const img = new Image();
-  img.src = GAS_API_URL + "?lineUserId=" + uid + "&t=" + Date.now();
+  img.src =
+    GAS_API_URL +
+    "?lineUserId=" + encodeURIComponent(profile.userId) +
+    "&displayName=" + encodeURIComponent(profile.displayName) +
+    "&t=" + Date.now();
 
-  // 🔥 ส่ง username/password เข้า AppSheet
   setTimeout(() => {
-    window.location.href =
-      APPSHEET_URL +
-      "?username=" + encodeURIComponent(uid) +
-      "&password=auto";
-  }, 800);
+    window.location.replace(APPSHEET_URL);
+  }, 500);
 })();
 </script>
+
+  
 </body>
 </html>
