@@ -10,8 +10,7 @@
 
 <script>
 const LIFF_ID = "2008686694-bLB6mwvm";
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz9ZQWjYXIzK8xiilclKzlgj8gzNo_FABcqLq_bCoKnN--3IwHrYTUbc_e5zVO8p95m/exec";
-const APPSHEET_URL = "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1d886b79d7";
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyvK1fB2S1LgjRxq8efIWz7gWnggIEMclT7XWDYzkWuchBgkXOGN_D6Q8N1mvRUef_y/exec";
 
 (async () => {
   await liff.init({ liffId: LIFF_ID });
@@ -26,15 +25,13 @@ const APPSHEET_URL = "https://www.appsheet.com/start/9e2e7172-8357-4bf4-82b8-da1
   const img = new Image();
   img.src =
     GAS_API_URL +
-    "?lineUserId=" + encodeURIComponent(profile.userId) +
-    "&displayName=" + encodeURIComponent(profile.displayName) +
-    "&t=" + Date.now();
+    "?lineUserId=" + profile.userId +
+    "&displayName=" + encodeURIComponent(profile.displayName);
 
-  setTimeout(() => {
-    window.location.replace(APPSHEET_URL);
-  }, 500);
+  alert("ผูก LINE สำเร็จแล้ว กลับเข้าแอปใหม่อีกครั้ง");
 })();
 </script>
+
 
   
 </body>
