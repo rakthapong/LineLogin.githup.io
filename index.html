@@ -5,24 +5,40 @@
   <title>LINE Login</title>
 </head>
 <body>
-  <h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
 
-  <script>
-    const channelId = "2008686694";
+<script>
+  const channelId = "2008686694";
+  const redirectUri =
+    "https://script.google.com/macros/s/AKfycbxvHbY1P2c2XuHYg5Co7Qdb7agXRfsU0uFLcy853cetTfr_PtoubzPvGM_srQ-GzJHN/exec";
 
-    // ⭐ ใส่ URL Google Apps Script /exec
-    const redirectUri =
-      "https://script.google.com/macros/s/AKfycbx57LG7rGwRXTSjM6pPW1UXjG8dCj6MC2nzqnyruLZIc46NLbd4GUT4QVvfZSAHzQNV/exec";
+  // 🔹 ถ้ามี code → แปลว่าล็อกอินสำเร็จแล้ว
+  if (location.search.includes("code=")) {
 
+    alert("เข้าสู่ระบบด้วย LINE สำเร็จแล้ว ✅");
+
+    document.body.innerHTML = `
+      <h3>เข้าสู่ระบบสำเร็จ</h3>
+      <p>คุณสามารถกลับไปใช้งานแอปได้เลย</p>
+      <button onclick="openApp()">เปิดแอป</button>
+    `;
+
+  } else {
+    // 🔹 ยังไม่ล็อกอิน → พาไป LINE
     const authUrl =
       "https://access.line.me/oauth2/v2.1/authorize" +
       "?response_type=code" +
       "&client_id=" + channelId +
       "&redirect_uri=" + encodeURIComponent(redirectUri) +
       "&state=login" +
-      "&scope=profile%20openid%20email";
+      "&scope=profile";
 
-    window.location.href = authUrl;
-  </script>
+    location.href = authUrl;
+  }
+
+  function openApp() {
+    window.location.href = "https://www.appsheet.com/start";
+  }
+</script>
+
 </body>
 </html>
