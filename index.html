@@ -1,38 +1,28 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
   <meta charset="utf-8">
-  <title>Login with LINE</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <title>LINE Login</title>
 </head>
 <body>
-<h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
+  <h3>กำลังเข้าสู่ระบบด้วย LINE...</h3>
 
-<script>
-const LIFF_ID = "2008686694-bLB6mwvm";
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxtjD_4TTh09xVZfpbCJYv4H5Ti0bs_AiO9nTr9c1Ifs1zqSuFdpyo0HEssbhdGe_nU/exec";
+  <script>
+    const channelId = "2008686694";
 
-(async () => {
-  await liff.init({ liffId: LIFF_ID });
+    // ⭐ ใส่ URL Google Apps Script /exec
+    const redirectUri =
+      "https://script.google.com/macros/s/AKfycbx57LG7rGwRXTSjM6pPW1UXjG8dCj6MC2nzqnyruLZIc46NLbd4GUT4QVvfZSAHzQNV/exec";
 
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
-  }
+    const authUrl =
+      "https://access.line.me/oauth2/v2.1/authorize" +
+      "?response_type=code" +
+      "&client_id=" + channelId +
+      "&redirect_uri=" + encodeURIComponent(redirectUri) +
+      "&state=login" +
+      "&scope=profile%20openid%20email";
 
-  const profile = await liff.getProfile();
-
-  const img = new Image();
-  img.src =
-    GAS_API_URL +
-    "?lineUserId=" + profile.userId +
-    "&displayName=" + encodeURIComponent(profile.displayName);
-
-  alert("ผูก LINE สำเร็จแล้ว กลับเข้าแอปใหม่อีกครั้ง");
-})();
-</script>
-
-
-  
+    window.location.href = authUrl;
+  </script>
 </body>
 </html>
