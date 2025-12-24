@@ -4,64 +4,26 @@
   <meta charset="UTF-8">
   <title>LINE Login</title>
 
-  <!-- ป้องกัน cache -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Cache-Control" content="no-store" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
 </head>
 
-<body>
+<body style="font-family:sans-serif;text-align:center;padding-top:80px;">
+
 <script>
-  /**************** CONFIG ****************/
+  /******** CONFIG ********/
   const LINE_CHANNEL_ID = "2008686694";
 
-  // Google Apps Script Web App (doGet)
   const GAS_URL =
     "https://script.google.com/macros/s/AKfycbyci6mn0YCGgKBOwLwbYMfwy8upsv2wbIRgkHXY9p5hZScc3gVyCz0rXk850aL217FczA/exec";
 
-  // AppSheet Deep Link (เปิด View user)
   const APPSHEET_USER_URL =
     "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=room_user";
-  /****************************************/
+  /************************/
 
   const params = new URLSearchParams(window.location.search);
 
-  /************************************************
-   * กรณีที่ 1 : LINE login สำเร็จ (กลับมาจาก GAS)
-   ************************************************/
-  if (params.get("success") === "1") {
-
-    alert(
-      "ล็อกอินด้วย LINE สำเร็จ 🎉\n" +
-      "ระบบจะเปิดแอพในเบราว์เซอร์ใหม่"
-    );
-
-    /**
-     * 🔴 สำคัญมาก
-     * ต้องเปิด AppSheet ใน top-level browser เท่านั้น
-     * ห้ามใช้ location.href
-     */
-    window.open(APPSHEET_USER_URL, "_blank");
-
-    // แสดงข้อความกันจอขาว
-    document.body.innerHTML = `
-      <h3>เข้าสู่ระบบสำเร็จ</h3>
-      <p>หากแอพไม่เปิดอัตโนมัติ กรุณากดปุ่มด้านล่าง</p>
-      <p>
-        <a href="${APPSHEET_USER_URL}" target="_blank"
-           style="font-size:18px;">
-          👉 เปิดแอพ AppSheet
-        </a>
-      </p>
-    `;
-
-  }
-
-  /************************************************
-   * กรณีที่ 2 : ยังไม่ได้ login → ไป LINE Login
-   ************************************************/
-  else {
-
+  function loginWithLine() {
     const authUrl =
       "https://access.line.me/oauth2/v2.1/authorize" +
       "?response_type=code" +
@@ -70,9 +32,46 @@
       "&state=login" +
       "&scope=profile";
 
-    // ไปหน้า LINE Login
+    // ต้องเกิดจาก user click เท่านั้น
     location.href = authUrl;
   }
 </script>
+
+<!-- ===== กรณี login สำเร็จ ===== -->
+<div id="success" style="display:none;">
+  <h2>✅ ล็อกอินด้วย LINE สำเร็จ</h2>
+  <p>กำลังเปิดแอพ…</p>
+
+  <p>
+    <a id="openApp" target="_blank"
+       style="font-size:18px;color:#06c;">
+       👉 เปิดแอพ AppSheet
+    </a>
+  </p>
+</div>
+
+<!-- ===== กรณียังไม่ login ===== -->
+<div id="login">
+  <h2>เข้าสู่ระบบ</h2>
+  <button onclick="loginWithLine()"
+    style="font-size:18px;padding:12px 24px;">
+    🔐 ล็อกอินด้วย LINE
+  </button>
+</div>
+
+<script>
+  // ถ้ามาจาก GAS (?success=1)
+  if (params.get("success") === "1") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("success").style.display = "block";
+
+    const link = document.getElementById("openApp");
+    link.href = APPSHEET_USER_URL;
+
+    // เปิด AppSheet ใน browser จริง
+    window.open(APPSHEET_USER_URL, "_blank");
+  }
+</script>
+
 </body>
 </html>
