@@ -17,7 +17,7 @@
 
   // Google Apps Script Web App (doGet)
   const GAS_URL =
-    "https://script.google.com/macros/s/AKfycbzYTh52hyo2I-7GHkjTxMQ7V2QbrjBonO1BpUk5S8RWAKNrpjGPFdo0O8u1tB0fyYvlQg/exec";
+    "https://script.google.com/macros/s/AKfycbyci6mn0YCGgKBOwLwbYMfwy8upsv2wbIRgkHXY9p5hZScc3gVyCz0rXk850aL217FczA/exec";
 
   // AppSheet Deep Link (เปิด View user)
   const APPSHEET_USER_URL =
@@ -66,4 +66,13 @@
       "https://access.line.me/oauth2/v2.1/authorize" +
       "?response_type=code" +
       "&client_id=" + LINE_CHANNEL_ID +
-      "&redirect_uri=" +_
+      "&redirect_uri=" + encodeURIComponent(GAS_URL) +
+      "&state=login" +
+      "&scope=profile";
+
+    // ไปหน้า LINE Login
+    location.href = authUrl;
+  }
+</script>
+</body>
+</html>
