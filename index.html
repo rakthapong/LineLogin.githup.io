@@ -1,29 +1,49 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="th">
- <head>
- <meta charset="UTF-8"
-> <title>LINE Login</title>
- </head> 
+<head>
+  <meta charset="UTF-8">
+  <title>LINE Login</title>
+</head>
+
 <body>
- <script> const channelId = "2008686694";
- const gasUrl = "https://script.google.com/macros/s/AKfycbyzQH4s94DVNvq6x1OuiRdFxDq8UoMicDs0frYv_CYTpUkozOLZuqpNWdGHW6hI4d_vMQ/exec"; 
+<script>
+  // ===== CONFIG =====
+  const channelId = "2008686694";
 
-const urlParams = new 
-URLSearchParams(window.location.search); 
+  // URL ของ Google Apps Script (เหมือนเดิม)
+  const gasUrl =
+    "https://script.google.com/macros/s/AKfycbyzQH4s94DVNvq6x1OuiRdFxDq8UoMicDs0frYv_CYTpUkozOLZuqpNWdGHW6hI4d_vMQ/exec";
 
-// ถ้า login สำเร็จ 
-if (urlParams.get("success") === "1") {
- alert("ล็อกอินด้วย LINE สำเร็จแล้ว 🎉\nสามารถปิดหน้านี้และกลับไปที่แอปได้เลย");
- } else {
- // ยังไม่ login → ไป LINE
- const authUrl = 
-"https://access.line.me/oauth2/v2.1/authorize" +
- "?response_type=code" +
- "&client_id=" + channelId + "&redirect_uri=" + encodeURIComponent(gasUrl) + "&state=login" + 
-"&scope=profile"; 
+  // Deep link เข้า AppSheet ฝั่ง user
+  const appsheetUserUrl =
+    "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=room_user";
+  // ==================
 
-location.href = authUrl;
- } </script> 
+  const urlParams = new URLSearchParams(window.location.search);
 
-</body> 
+  // ===== กรณี login LINE สำเร็จ =====
+  if (urlParams.get("success") === "1") {
+
+    alert(
+      "ล็อกอินด้วย LINE สำเร็จ 🎉\n" +
+      "กำลังพากลับเข้าแอพ..."
+    );
+
+    // เด้งเข้า AppSheet (เว็บหรือแอพมือถือ)
+    location.href = appsheetUserUrl;
+
+  } else {
+    // ===== ยังไม่ login → ไปหน้า LINE Login =====
+    const authUrl =
+      "https://access.line.me/oauth2/v2.1/authorize" +
+      "?response_type=code" +
+      "&client_id=" + channelId +
+      "&redirect_uri=" + encodeURIComponent(gasUrl) +
+      "&state=login" +
+      "&scope=profile";
+
+    location.href = authUrl;
+  }
+</script>
+</body>
 </html>
