@@ -1,60 +1,29 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <title>กำลังเข้าสู่ระบบ</title>
-</head>
+ <head>
+ <meta charset="UTF-8"
+> <title>LINE Login</title>
+ </head> 
 <body>
+ <script> const channelId = "2008686694";
+ const gasUrl = "https://script.google.com/macros/s/AKfycbyzQH4s94DVNvq6x1OuiRdFxDq8UoMicDs0frYv_CYTpUkozOLZuqpNWdGHW6hI4d_vMQ/exec"; 
 
-<script>
-  const APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";        // ← ใส่ App ID
-  const USER_VIEW = "payment_user";         // ← ชื่อ View ฝั่ง user
+const urlParams = new 
+URLSearchParams(window.location.search); 
 
-  const params = new URLSearchParams(window.location.search);
-  const success = params.get("success");
-  const lineUserId = params.get("lineUserId");
+// ถ้า login สำเร็จ 
+if (urlParams.get("success") === "1") {
+ alert("ล็อกอินด้วย LINE สำเร็จแล้ว 🎉\nสามารถปิดหน้านี้และกลับไปที่แอปได้เลย");
+ } else {
+ // ยังไม่ login → ไป LINE
+ const authUrl = 
+"https://access.line.me/oauth2/v2.1/authorize" +
+ "?response_type=code" +
+ "&client_id=" + channelId + "&redirect_uri=" + encodeURIComponent(gasUrl) + "&state=login" + 
+"&scope=profile"; 
 
-  if (success === "1" && lineUserId) {
+location.href = authUrl;
+ } </script> 
 
-    // 1️⃣ เก็บ lineUserId ให้ AppSheet ใช้
-    localStorage.setItem("lineUserId", lineUserId);
-
-    // 2️⃣ สร้าง Deep Link
-    const appLink =
-      "appsheet://www.appsheet.com/start/" + APP_ID +
-      "#view=" + USER_VIEW;
-
-    const webLink =
-      "https://www.appsheet.com/start/" + APP_ID +
-      "#view=" + USER_VIEW;
-
-    // 3️⃣ พยายามเปิดแอพมือถือก่อน
-    window.location.href = appLink;
-
-    // 4️⃣ fallback ไปเว็บ
-    setTimeout(() => {
-      window.location.href = webLink;
-    }, 1500);
-
-  } else {
-    // ยังไม่ login → ไป LINE
-    const channelId = "2008686694";
-    const gasUrl =
-      "https://script.google.com/macros/s/AKfycbwLZ_hH4HzNv6rE4CLtFxZ9MXMEgTExwzOFILW-pxxkiTHubw12WijpkuxiKdLfpaijqQ/exec";
-
-    const authUrl =
-      "https://access.line.me/oauth2/v2.1/authorize" +
-      "?response_type=code" +
-      "&client_id=" + channelId +
-      "&redirect_uri=" + encodeURIComponent(gasUrl) +
-      "&state=login" +
-      "&scope=profile";
-
-    window.location.href = authUrl;
-  }
-</script>
-
-<p>กำลังเข้าสู่ระบบ กรุณารอสักครู่…</p>
-
-</body>
+</body> 
 </html>
