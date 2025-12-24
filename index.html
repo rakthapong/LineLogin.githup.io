@@ -3,47 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <title>LINE Login</title>
+
+  <!-- ป้องกัน cache -->
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 </head>
 
 <body>
 <script>
-  // ===== CONFIG =====
-  const channelId = "2008686694";
+  /**************** CONFIG ****************/
+  const LINE_CHANNEL_ID = "2008686694";
 
-  // URL ของ Google Apps Script (เหมือนเดิม)
-  const gasUrl =
+  // Google Apps Script Web App (doGet)
+  const GAS_URL =
     "https://script.google.com/macros/s/AKfycbzYTh52hyo2I-7GHkjTxMQ7V2QbrjBonO1BpUk5S8RWAKNrpjGPFdo0O8u1tB0fyYvlQg/exec";
 
-  // Deep link เข้า AppSheet ฝั่ง user
-  const appsheetUserUrl =
+  // AppSheet Deep Link (เปิด View user)
+  const APPSHEET_USER_URL =
     "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=room_user";
-  // ==================
+  /****************************************/
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
 
-  // ===== กรณี login LINE สำเร็จ =====
-  if (urlParams.get("success") === "1") {
+  /************************************************
+   * กรณีที่ 1 : LINE login สำเร็จ (กลับมาจาก GAS)
+   ************************************************/
+  if (params.get("success") === "1") {
 
     alert(
       "ล็อกอินด้วย LINE สำเร็จ 🎉\n" +
-      "กำลังพากลับเข้าแอพ..."
+      "ระบบจะเปิดแอพในเบราว์เซอร์ใหม่"
     );
 
-    // เด้งเข้า AppSheet (เว็บหรือแอพมือถือ)
-    location.href = appsheetUserUrl;
+    /**
+     * 🔴 สำคัญมาก
+     * ต้องเปิด AppSheet ใน top-level browser เท่านั้น
+     * ห้ามใช้ location.href
+     */
+    window.open(APPSHEET_USER_URL, "_blank");
 
-  } else {
-    // ===== ยังไม่ login → ไปหน้า LINE Login =====
+    // แสดงข้อความกันจอขาว
+    document.body.innerHTML = `
+      <h3>เข้าสู่ระบบสำเร็จ</h3>
+      <p>หากแอพไม่เปิดอัตโนมัติ กรุณากดปุ่มด้านล่าง</p>
+      <p>
+        <a href="${APPSHEET_USER_URL}" target="_blank"
+           style="font-size:18px;">
+          👉 เปิดแอพ AppSheet
+        </a>
+      </p>
+    `;
+
+  }
+
+  /************************************************
+   * กรณีที่ 2 : ยังไม่ได้ login → ไป LINE Login
+   ************************************************/
+  else {
+
     const authUrl =
       "https://access.line.me/oauth2/v2.1/authorize" +
       "?response_type=code" +
-      "&client_id=" + channelId +
-      "&redirect_uri=" + encodeURIComponent(gasUrl) +
-      "&state=login" +
-      "&scope=profile";
-
-    location.href = authUrl;
-  }
-</script>
-</body>
-</html>
+      "&client_id=" + LINE_CHANNEL_ID +
+      "&redirect_uri=" +_
