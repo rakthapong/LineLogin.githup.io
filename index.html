@@ -23,13 +23,8 @@ function loginWithLine() {
 
   window.location.href = url;
 }
-
-// ถ้าล็อกอินสำเร็จ
-if (new URLSearchParams(location.search).get("success") === "1") {
-  window.location.href =
-    "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=user_home";
-}
 </script>
+
 
 <h2>เข้าสู่ระบบ</h2>
 <button onclick="loginWithLine()" style="font-size:18px;padding:12px 30px;">
