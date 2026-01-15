@@ -1,26 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>LINE Login</title>
+  <meta charset="UTF-8">
+  <title>LINE Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="text-align:center;padding-top:100px">
+
+<body style="text-align:center;padding-top:100px;font-family:sans-serif;">
+
+<h2>เข้าสู่ระบบ</h2>
 
 <script>
 const LINE_CHANNEL_ID = "2008686694";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzvTIY6Rd_bEUv-sNR9wKWLVY1W9xqltBfBmsKe42tFNk2nfzo1UV3Frzza1d7RzmFJfA/exec";
 
-function login() {
-  location.href =
+// 🔴 ใส่ URL /exec จาก deployment แค่ครั้งเดียว
+const GAS_URL =
+  "https://script.google.com/macros/s/AKfycbxiGZxqzN33mCIqLi9FELNltzuDviaMdnvmKYMh7Ys3jewRp67DphhplfNbM-fmzFUv/exec";
+
+function loginWithLine() {
+
+  const authUrl =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
     "&client_id=" + LINE_CHANNEL_ID +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
+    "&state=login" +
     "&scope=profile";
+
+  location.href = authUrl;
 }
 </script>
 
-<button onclick="login()" style="font-size:20px">
+<button onclick="loginWithLine()"
+  style="font-size:20px;padding:12px 24px;cursor:pointer;">
 🔐 Login with LINE
 </button>
 
