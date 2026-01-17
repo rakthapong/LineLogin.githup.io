@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>LINE Login</title>
+  <title>เข้าสู่ระบบ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -12,22 +12,18 @@
 
 <script>
 const LINE_CHANNEL_ID = "2008686694";
-
-// 🔴 ใส่ URL /exec จาก deployment แค่ครั้งเดียว
-const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbxiGZxqzN33mCIqLi9FELNltzuDviaMdnvmKYMh7Ys3jewRp67DphhplfNbM-fmzFUv/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz6dwqrjdOxTu0NUazrB-w4skY4Zb4P9hSF3u4_2xIQqdDoj4amZ333MLYiUb9tujT0QQ/exec";
 
 function loginWithLine() {
-
-  const authUrl =
+  const url =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
     "&client_id=" + LINE_CHANNEL_ID +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
-    "&state=login" +
-    "&scope=profile";
+    "&scope=profile" +
+    "&state=login";
 
-  location.href = authUrl;
+  location.href = url;
 }
 </script>
 
