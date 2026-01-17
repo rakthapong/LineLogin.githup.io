@@ -12,12 +12,37 @@
   font-family:sans-serif;
 ">
 
-<h2>เข้าสู่ระบบ</h2>
+<h2 id="title">เข้าสู่ระบบ</h2>
 
 <script>
+/* =======================
+   CONFIG
+======================= */
 const LINE_CHANNEL_ID = "2008686694";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxCEmQAr_P4O0dhs1d53bQQG56HDrVkXUsfiKzaYYUW7oCji4IEld88Eazs-kp4ENm9gA/exec";
+const GAS_URL =
+  "https://script.google.com/macros/s/AKfycbxCEmQAr_P4O0dhs1d53bQQG56HDrVkXUsfiKzaYYUW7oCji4IEld88Eazs-kp4ENm9gA/exec";
 
+const APPSHEET_APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";
+
+/* map เมนู → AppSheet view */
+const views = {
+  payment: "payment_user",
+  maintenance: "maintenance_user",
+  service: "service_user",
+  room: "room_user",
+  roomstatus: "roomstatus_user"
+};
+
+/* =======================
+   READ PARAMS
+======================= */
+const params = new URLSearchParams(window.location.search);
+const menu = params.get("menu");
+const loggedIn = params.get("login"); // GAS ส่งกลับมาได้ถ้าต้องการ
+
+/* =======================
+   LOGIN FUNCTION
+======================= */
 function loginWithLine() {
   const url =
     "https://access.line.me/oauth2/v2.1/authorize" +
@@ -28,6 +53,33 @@ function loginWithLine() {
     "&state=login";
 
   location.href = url;
+}
+
+/* =======================
+   AUTO REDIRECT TO APPSHEET
+======================= */
+function redirectToAppSheet() {
+  if (!menu || !views[menu]) return;
+
+  const appUrl =
+    `https://www.appsheet.com/start/${APPSHEET_APP_ID}?view=${views[menu]}`;
+
+  document.body.innerHTML = "<h3>กำลังเปิดแอป...</h3>";
+
+  // redirect ปกติ
+  window.location.href = appUrl;
+
+  // fallback สำหรับ iOS / LINE browser
+  setTimeout(() => {
+    window.open(appUrl, "_blank");
+  }, 800);
+}
+
+/* =======================
+   MAIN LOGIC
+======================= */
+if (menu) {
+  redirectToAppSheet();
 }
 </script>
 
