@@ -6,16 +6,14 @@
 <title>เข้าสู่ระบบ</title>
 </head>
 
-<body style="text-align:center;padding-top:100px;font-family:sans-serif">
+<body style="text-align:center;padding-top:120px;font-family:sans-serif">
 
-<h2 id="title">เข้าสู่ระบบ</h2>
+<h2>เข้าสู่ระบบ</h2>
 
 <script>
-/* ===== CONFIG ===== */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyzykQUd82rcmHfqWRkXl51-MyqkUJCCbU987_1OGUxWoelHE-e5v6z1rgbNzCjzC6Wmg/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyCfwIlXwaTeAcQwHUDRKenZfVJwjQOK7yhOW7obe2pEr7ewrHjSQnvhIxJydBhMgj9hw/exec";
 const APPSHEET_APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";
 
-/* menu → AppSheet view */
 const views = {
   payment: "payment_user",
   maintenance: "maintenance_user",
@@ -28,7 +26,6 @@ const params = new URLSearchParams(location.search);
 const menu = params.get("menu");
 const loggedIn = localStorage.getItem("line_logged_in");
 
-/* ===== LOGIN ===== */
 function loginWithLine() {
   location.href =
     "https://access.line.me/oauth2/v2.1/authorize" +
@@ -38,17 +35,14 @@ function loginWithLine() {
     "&scope=profile";
 }
 
-/* ===== OPEN APPSHEET ===== */
 function openApp() {
   let url = `https://www.appsheet.com/start/${APPSHEET_APP_ID}`;
   if (menu && views[menu]) {
     url += `?view=${views[menu]}`;
   }
   location.href = url;
-  setTimeout(() => window.open(url, "_blank"), 800);
 }
 
-/* ===== UI LOGIC ===== */
 if (loggedIn === "yes") {
   document.write(`
     <button onclick="openApp()" style="font-size:20px;padding:14px 30px">
