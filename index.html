@@ -6,63 +6,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body style="text-align:center;padding-top:120px;font-family:sans-serif">
+<body style="
+  text-align:center;
+  padding-top:120px;
+  font-family:sans-serif;
+">
 
-<h2 id="title">เข้าสู่ระบบ</h2>
-<p id="desc"></p>
+<h2>เข้าสู่ระบบ</h2>
+<p>เลือกวิธีเข้าใช้งาน</p>
 
 <script>
-/* ================= CONFIG ================= */
+/* ===== CONFIG ===== */
 const LINE_CHANNEL_ID = "2008686694";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzCRJqVOHc-TbMJyHFosaSGU2PR7NS_MIkPnECv_BP6_SHQ0HrHda5wmd-w3BTjLH-27Q/exec";
+const GAS_URL =
+  "https://script.google.com/macros/s/AKfycbwwoSyM5N5SEQPpny-PEv3tIG1NOvDTjJKhPmj6Wakb71c9XEpFrkMqpp021PO8JKH4yA/exec";
+
 const APPSHEET_APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";
 
-/* menu → AppSheet view */
-const views = {
-  payment: "payment_user",
-  maintenance: "maintenance_user",
-  service: "service_user",
-  room: "room_user",
-  roomstatus: "roomstatus_user"
-};
-
-/* ================= PARAM ================= */
-const params = new URLSearchParams(location.search);
+/* ===== PARAM ===== */
+const params = new URLSearchParams(window.location.search);
 const menu = params.get("menu");
-const loggedIn = localStorage.getItem("line_logged_in");
 
-/* ================= FUNCTIONS ================= */
+/* ===== LOGIN ===== */
 function loginWithLine() {
-  location.href =
+  const url =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
     "&client_id=" + LINE_CHANNEL_ID +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
-    "&scope=profile";
+    "&scope=profile" +
+    "&state=login";
+
+  location.href = url;
 }
 
+/* ===== OPEN APPSHEET ===== */
 function openAppSheet() {
   let url = `https://www.appsheet.com/start/${APPSHEET_APP_ID}`;
-  if (menu && views[menu]) {
-    url += `?view=${views[menu]}`;
+  if (menu) {
+    url += `?page=${menu}`;
   }
-  location.href = url;
-  setTimeout(() => window.open(url, "_blank"), 800);
-}
 
-/* ================= UI LOGIC ================= */
-if (loggedIn === "yes") {
-  document.getElementById("desc").innerText = "คุณเข้าสู่ระบบแล้ว";
-  openAppSheet(); // 🔥 เปิดอัตโนมัติทันที
-} else {
-  document.getElementById("desc").innerText = "กรุณาเข้าสู่ระบบด้วย LINE";
-  document.write(`
-    <button onclick="loginWithLine()" style="font-size:20px;padding:14px 30px">
-      🔐 Login with LINE
-    </button>
-  `);
+  window.location.href = url;
+
+  // fallback สำหรับ iOS / LINE browser
+  setTimeout(() => {
+    window.open(url, "_blank");
+  }, 800);
 }
 </script>
+
+<button onclick="loginWithLine()"
+  style="font-size:18px;padding:14px 26px;margin-bottom:16px;">
+  🔐 Login with LINE
+</button>
+
+<br>
+
+<button onclick="openAppSheet()"
+  style="font-size:18px;padding:14px 26px;">
+  🚀 เข้าใช้งานระบบ
+</button>
 
 </body>
 </html>
