@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แจ้งชำระเงิน</title>
+</head>
+
+<body style="text-align:center;padding-top:100px;font-family:sans-serif">
+
+<h2>💰 แจ้งชำระเงิน</h2>
+
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz6qwpuFoFQGR1tKawUSEVo_V3NuZpCr7TEjjV4aB8ihXd5zpxuP6Nzl2iAjFwKIMj3iw/exec";
+const APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";
+const VIEW = "payment_user";
+
+function loginWithLine() {
+  location.href =
+    "https://access.line.me/oauth2/v2.1/authorize" +
+    "?response_type=code" +
+    "&client_id=2008686694" +
+    "&redirect_uri=" + encodeURIComponent(GAS_URL) +
+    "&scope=profile";
+}
+
+function openApp() {
+  const url = `https://www.appsheet.com/start/${APP_ID}?view=${VIEW}`;
+  location.href = url;
+  setTimeout(() => window.open(url,"_blank"),800);
+}
+</script>
+
+<button onclick="openApp()" style="font-size:20px;padding:14px 30px">
+🚀 เข้าแจ้งชำระเงิน
+</button>
+
+<br><br>
+
+</body>
+</html>
