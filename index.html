@@ -1,57 +1,68 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>เข้าสู่ระบบ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เข้าสู่ระบบ</title>
 </head>
 
-<body style="text-align:center;padding-top:120px;font-family:sans-serif;">
+<body style="text-align:center;padding-top:100px;font-family:sans-serif">
 
 <h2 id="title">เข้าสู่ระบบ</h2>
-<p id="desc">เลือกวิธีเข้าใช้งาน</p>
 
 <script>
-const LINE_CHANNEL_ID = "2008686694";
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxCEmQAr_P4O0dhs1d53bQQG56HDrVkXUsfiKzaYYUW7oCji4IEld88Eazs-kp4ENm9gA/exec";
-
+/* ===== CONFIG ===== */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyzykQUd82rcmHfqWRkXl51-MyqkUJCCbU987_1OGUxWoelHE-e5v6z1rgbNzCjzC6Wmg/exec";
 const APPSHEET_APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";
 
-const params = new URLSearchParams(window.location.search);
-const menu = params.get("menu");
+/* menu → AppSheet view */
+const views = {
+  payment: "payment_user",
+  maintenance: "maintenance_user",
+  service: "service_user",
+  room: "room_user",
+  roomstatus: "roomstatus_user"
+};
 
+const params = new URLSearchParams(location.search);
+const menu = params.get("menu");
+const loggedIn = localStorage.getItem("line_logged_in");
+
+/* ===== LOGIN ===== */
 function loginWithLine() {
-  const url =
+  location.href =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
-    "&client_id=" + LINE_CHANNEL_ID +
+    "&client_id=2008686694" +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
-    "&scope=profile" +
-    "&state=login";
-
-  location.href = url;
+    "&scope=profile";
 }
 
-function openAppSheet() {
+/* ===== OPEN APPSHEET ===== */
+function openApp() {
   let url = `https://www.appsheet.com/start/${APPSHEET_APP_ID}`;
-  if (menu) url += `?page=${menu}`;
-
-  window.location.href = url;
+  if (menu && views[menu]) {
+    url += `?view=${views[menu]}`;
+  }
+  location.href = url;
   setTimeout(() => window.open(url, "_blank"), 800);
 }
+
+/* ===== UI LOGIC ===== */
+if (loggedIn === "yes") {
+  document.write(`
+    <button onclick="openApp()" style="font-size:20px;padding:14px 30px">
+      🚀 เข้าใช้งานระบบ
+    </button>
+  `);
+} else {
+  document.write(`
+    <button onclick="loginWithLine()" style="font-size:20px;padding:14px 30px">
+      🔐 Login with LINE
+    </button>
+  `);
+}
 </script>
-
-<button onclick="loginWithLine()"
-  style="font-size:18px;padding:14px 26px;margin-bottom:16px;">
-🔐 Login with LINE
-</button>
-
-<br>
-
-<button onclick="openAppSheet()"
-  style="font-size:18px;padding:14px 26px;">
-🚀 เข้าใช้งานระบบ
-</button>
 
 </body>
 </html>
