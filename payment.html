@@ -2,43 +2,56 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-store">
   <title>แจ้งชำระเงิน</title>
-
-  <script>
-    const LINE_CHANNEL_ID = "2008686694";
-    const GAS_URL =
-      "https://script.google.com/macros/s/AKfycbz6qwpuFoFQGR1tKawUSEVo_V3NuZpCr7TEjjV4aB8ihXd5zpxuP6Nzl2iAjFwKIMj3iw/exec";
-    const APPSHEET_SHORTCUT =
-      "https://www.appsheet.com/newshortcut/1e844dd1-1d99-431f-909c-eb52684f5ccf";
-  </script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store" />
 </head>
 
 <body style="font-family:sans-serif;text-align:center;padding-top:80px;">
 
 <script>
-const VIEW = "payment_user";
+/******** CONFIG ********/
+const LINE_CHANNEL_ID = "2008686694";
+const GAS_URL =
+  "https://script.google.com/macros/s/AKfycbxkWL4o2WNbLB_NFIVqS6lNvcL3ef3YMUthVTPoGsdUGNmhOKG7CEj-9xwH3VZ1aMXATA/exec";
 
-function loginWithLine() {
-  location.href =
+// 👉 View แจ้งชำระเงินโดยตรง
+const PAYMENT_VIEW_URL =
+  "https://www.appsheet.com/newshortcut/1e844dd1-1d99-431f-909c-eb52684f5ccf?view=payment_user";
+/************************/
+
+const params = new URLSearchParams(window.location.search);
+
+// 🔐 ยังไม่เคย login → พาไป LINE Login
+function goLogin() {
+  const authUrl =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
     "&client_id=" + LINE_CHANNEL_ID +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
+    "&state=login" +
     "&scope=profile";
+
+  location.href = authUrl;
 }
 
-function openApp() {
-  window.open(`${APPSHEET_SHORTCUT}?view=${VIEW}`, "_blank");
+// 🚀 login แล้ว → เข้า AppSheet ทันที
+function openPayment() {
+  location.href = PAYMENT_VIEW_URL;
+  setTimeout(() => window.open(PAYMENT_VIEW_URL, "_blank"), 800);
+}
+
+// ===== LOGIC กลาง =====
+if (params.get("success") === "1") {
+  // เคย login แล้ว
+  openPayment();
+} else {
+  // ยังไม่ login
+  goLogin();
 }
 </script>
 
-  <button onclick="openApp()"
-  style="font-size:18px;padding:14px 30px;">
-🚀 เปิดหน้าแจ้งชำระเงิน
-</button>
+<p>กำลังพาไปหน้าแจ้งชำระเงิน…</p>
 
 </body>
 </html>
