@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>แจ้งชำระเงิน</title>
+  <title>กำลังเปิดระบบ…</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Cache-Control" content="no-store" />
 </head>
@@ -10,48 +10,66 @@
 <body style="font-family:sans-serif;text-align:center;padding-top:80px;">
 
 <script>
-/******** CONFIG ********/
+/* ===== CONFIG ===== */
 const LINE_CHANNEL_ID = "2008686694";
 const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbxkWL4o2WNbLB_NFIVqS6lNvcL3ef3YMUthVTPoGsdUGNmhOKG7CEj-9xwH3VZ1aMXATA/exec";
+  "https://script.google.com/macros/s/AKfycbz6qwpuFoFQGR1tKawUSEVo_V3NuZpCr7TEjjV4aB8ihXd5zpxuP6Nzl2iAjFwKIMj3iw/exec";
 
-// 👉 View แจ้งชำระเงินโดยตรง
-const PAYMENT_VIEW_URL =
-  "https://www.appsheet.com/newshortcut/1e844dd1-1d99-431f-909c-eb52684f5ccf?view=payment_user";
-/************************/
+const APPSHEET_APP_ID =
+  "1e844dd1-1d99-431f-909c-eb52684f5ccf";
+
+/* map menu → AppSheet view */
+const VIEWS = {
+  payment: "payment_user",
+  maintenance: "maintenance_user",
+  service: "service_user",
+  room: "room_user",
+  roomstatus: "roomstatus_user"
+};
+/* ================== */
 
 const params = new URLSearchParams(window.location.search);
+const menu = params.get("menu");        // มาจาก Rich Menu
+const success = params.get("success");  // มาจาก GAS
 
-// 🔐 ยังไม่เคย login → พาไป LINE Login
-function goLogin() {
+function lineLogin() {
   const authUrl =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
     "&client_id=" + LINE_CHANNEL_ID +
-    "&redirect_uri=" + encodeURIComponent(GAS_URL) +
-    "&state=login" +
+    "&redirect_uri=" + encodeURIComponent(GAS_URL + "?menu=" + menu) +
     "&scope=profile";
 
   location.href = authUrl;
 }
 
-// 🚀 login แล้ว → เข้า AppSheet ทันที
-function openPayment() {
-  location.href = PAYMENT_VIEW_URL;
-  setTimeout(() => window.open(PAYMENT_VIEW_URL, "_blank"), 800);
+function openAppSheet() {
+  const view = VIEWS[menu] || "payment_user";
+
+  const url =
+    "https://www.appsheet.com/newshortcut/" +
+    APPSHEET_APP_ID +
+    "?view=" + view;
+
+  location.href = url;
+  setTimeout(() => window.open(url, "_blank"), 800);
 }
 
-// ===== LOGIC กลาง =====
-if (params.get("success") === "1") {
+/* ===== MAIN LOGIC ===== */
+if (!menu) {
+  document.body.innerHTML = "<h3>ไม่พบเมนู</h3>";
+}
+else if (success === "1") {
   // เคย login แล้ว
-  openPayment();
-} else {
+  openAppSheet();
+}
+else {
   // ยังไม่ login
-  goLogin();
+  lineLogin();
 }
 </script>
 
-<p>กำลังพาไปหน้าแจ้งชำระเงิน…</p>
+<p>กำลังเปิดระบบ กรุณารอสักครู่…</p>
 
 </body>
 </html>
