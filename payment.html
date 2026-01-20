@@ -20,9 +20,9 @@
 
 <script>
 /******** CONFIG ********/
-const LIFF_ID = "ใส่_LIFF_ID_ของคุณ";
+const LIFF_ID = "2008686694-bLB6mwvm";
 const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbzoajmBZVMliUe_CavmwLa-f1uwm7RWvQMRipd4cs5jgpxSs1DCTqKItDOMFz0_nvwFrA/exec";
+  "https://script.google.com/macros/s/AKfycbzRkH5b29biTjtmSjX-cRnOpvuiOUi3EuAA4UaMExzTYKcNsLDhfhhT3rSIlzZcO9PMCQ/exec";
 /************************/
 
 async function start() {
@@ -36,7 +36,7 @@ async function start() {
   const profile = await liff.getProfile();
   const lineUserId = profile.userId;
 
-  // redirect ไป GAS พร้อม lineUserId
+  // ส่ง lineUserId ไปตรวจสอบที่ GAS
   window.location.href =
     GAS_URL + "?lineUserId=" + encodeURIComponent(lineUserId);
 }
