@@ -6,61 +6,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body style="
-  text-align:center;
-  padding-top:120px;
-  font-family:sans-serif;
-">
+<body style="text-align:center;padding-top:120px;font-family:sans-serif;">
 
 <h2>เข้าสู่ระบบ</h2>
 
+<input
+  id="idCard"
+  type="text"
+  maxlength="13"
+  placeholder="กรอกเลขบัตรประชาชน 13 หลัก"
+  style="font-size:16px;padding:10px;width:260px;"
+/>
+
+<br><br>
+
+<button onclick="loginWithLine()"
+  style="font-size:18px;padding:14px 26px;">
+  🔐 Login with LINE
+</button>
+
 <script>
-/* ===== CONFIG ===== */
 const LINE_CHANNEL_ID = "2008686694";
 const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbz6qwpuFoFQGR1tKawUSEVo_V3NuZpCr7TEjjV4aB8ihXd5zpxuP6Nzl2iAjFwKIMj3iw/exec";
+  "https://script.google.com/macros/s/AKfycbyHXlbwtzgAZ_JQw1sXu88wmfd-xeVzha0UB62WspQgPv7rBwM-kN8o8MefGy_9zXaOCA/exec";
 
-const APPSHEET_APP_ID = "1e844dd1-1d99-431f-909c-eb52684f5ccf";
-
-/* ===== PARAM ===== */
-const params = new URLSearchParams(window.location.search);
-const menu = params.get("menu");
-
-/* ===== LOGIN ===== */
 function loginWithLine() {
+  const idCard = document.getElementById("idCard").value.trim();
+
+  // ❌ validation
+  if (!idCard || idCard.length !== 13 || isNaN(idCard)) {
+    alert("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+    return;
+  }
+
   const url =
     "https://access.line.me/oauth2/v2.1/authorize" +
     "?response_type=code" +
     "&client_id=" + LINE_CHANNEL_ID +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
     "&scope=profile" +
-    "&state=login";
+    "&state=" + idCard;   // 🔥 ส่งเลขบัตรไปใน state
 
   location.href = url;
 }
-
-/* ===== OPEN APPSHEET ===== */
-function openAppSheet() {
-  let url = `https://www.appsheet.com/start/${APPSHEET_APP_ID}`;
-  if (menu) {
-    url += `?page=${menu}`;
-  }
-
-  window.location.href = url;
-
-  // fallback สำหรับ iOS / LINE browser
-  setTimeout(() => {
-    window.open(url, "_blank");
-  }, 800);
-}
 </script>
-
-<button onclick="loginWithLine()"
-  style="font-size:18px;padding:14px 26px;margin-bottom:16px;">
-  🔐 Login with LINE
-</button>
-
-<br>
 
 </body>
 </html>
