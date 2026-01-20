@@ -2,74 +2,47 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>กำลังเปิดระบบ…</title>
+  <title>แจ้งชำระเงิน</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-store" />
+
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 
-<body style="font-family:sans-serif;text-align:center;padding-top:80px;">
+<body style="
+  font-family:sans-serif;
+  text-align:center;
+  padding-top:100px;
+">
+
+<h2>กำลังเปิดหน้าแจ้งชำระเงิน...</h2>
+<p>กรุณารอสักครู่</p>
 
 <script>
-/* ===== CONFIG ===== */
-const LINE_CHANNEL_ID = "2008686694";
+/******** CONFIG ********/
+const LIFF_ID = "ใส่_LIFF_ID_ของคุณ";
 const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbxxLgBOf-72fife6rL8pPCvuefjZiA7N9PDdIy3AC85tdrxcxdnIzOWs43Asx8hjSlP0g/exec";
+  "https://script.google.com/macros/s/AKfycbzoajmBZVMliUe_CavmwLa-f1uwm7RWvQMRipd4cs5jgpxSs1DCTqKItDOMFz0_nvwFrA/exec";
+/************************/
 
-const APPSHEET_APP_ID =
-  "1e844dd1-1d99-431f-909c-eb52684f5ccf";
+async function start() {
+  await liff.init({ liffId: LIFF_ID });
 
-/* map menu → AppSheet view */
-const VIEWS = {
-  payment: "payment_user",
-  maintenance: "maintenance_user",
-  service: "service_user",
-  room: "room_user",
-  roomstatus: "roomstatus_user"
-};
-/* ================== */
+  if (!liff.isLoggedIn()) {
+    liff.login();
+    return;
+  }
 
-const params = new URLSearchParams(window.location.search);
-const menu = params.get("menu");        // มาจาก Rich Menu
-const success = params.get("success");  // มาจาก GAS
+  const profile = await liff.getProfile();
+  const lineUserId = profile.userId;
 
-function lineLogin() {
-  const authUrl =
-    "https://access.line.me/oauth2/v2.1/authorize" +
-    "?response_type=code" +
-    "&client_id=" + LINE_CHANNEL_ID +
-    "&redirect_uri=" + encodeURIComponent(GAS_URL + "?menu=" + menu) +
-    "&scope=profile";
-
-  location.href = authUrl;
+  // redirect ไป GAS พร้อม lineUserId
+  window.location.href =
+    GAS_URL + "?lineUserId=" + encodeURIComponent(lineUserId);
 }
 
-function openAppSheet() {
-  const view = VIEWS[menu] || "payment_user";
-
-  const url =
-    "https://www.appsheet.com/newshortcut/" +
-    APPSHEET_APP_ID +
-    "?view=" + view;
-
-  location.href = url;
-  setTimeout(() => window.open(url, "_blank"), 800);
-}
-
-/* ===== MAIN LOGIC ===== */
-if (!menu) {
-  document.body.innerHTML = "<h3>ไม่พบเมนู</h3>";
-}
-else if (success === "1") {
-  // เคย login แล้ว
-  openAppSheet();
-}
-else {
-  // ยังไม่ login
-  lineLogin();
-}
+start();
 </script>
-
-<p>กำลังเปิดระบบ กรุณารอสักครู่…</p>
 
 </body>
 </html>
