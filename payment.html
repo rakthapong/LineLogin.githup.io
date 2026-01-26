@@ -2,34 +2,33 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>เปิดในเบราว์เซอร์</title>
+  <title>เปิด AppSheet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body style="font-family:sans-serif;text-align:center;padding-top:80px;">
 
-<h2>เพื่อการใช้งานที่เสถียร</h2>
-<p>กรุณาเปิดผ่าน Safari / Chrome</p>
+<h2>เปิดหน้าแจ้งชำระเงิน</h2>
 
-<a
-  href="https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=payment_user"
-  target="_blank"
-  style="
-    display:inline-block;
-    margin-top:30px;
-    padding:14px 22px;
-    background:#1e88e5;
-    color:#fff;
-    text-decoration:none;
-    border-radius:8px;
-    font-size:16px;
-  "
+<button
+  style="padding:14px 22px;font-size:16px;"
+  onclick="openExternal()"
 >
-🚀 เปิดในเบราว์เซอร์
-</a>
+🚀 เปิดใน Safari / Chrome
+</button>
 
-<p style="margin-top:40px;color:#888;font-size:13px;">
-(แนะนำสำหรับการใช้งานครั้งแรก)
-</p>
+<script>
+const LIFF_ID = "LIFF_ID_ของคุณ";
+
+async function openExternal() {
+  await liff.init({ liffId: LIFF_ID });
+
+  liff.openWindow({
+    url: "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=payment_user",
+    external: true
+  });
+}
+</script>
 
 </body>
 </html>
