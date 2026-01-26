@@ -2,47 +2,34 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>แจ้งชำระเงิน</title>
+  <title>เปิดในเบราว์เซอร์</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- LIFF SDK -->
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
+<body style="font-family:sans-serif;text-align:center;padding-top:80px;">
 
-<body style="
-  font-family:sans-serif;
-  text-align:center;
-  padding-top:100px;
-">
+<h2>เพื่อการใช้งานที่เสถียร</h2>
+<p>กรุณาเปิดผ่าน Safari / Chrome</p>
 
-<h2>กำลังเปิดหน้าแจ้งชำระเงิน...</h2>
-<p>กรุณารอสักครู่</p>
+<a
+  href="https://www.appsheet.com/start/APP_ID#view=payment_user"
+  target="_blank"
+  style="
+    display:inline-block;
+    margin-top:30px;
+    padding:14px 22px;
+    background:#1e88e5;
+    color:#fff;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:16px;
+  "
+>
+🚀 เปิดในเบราว์เซอร์
+</a>
 
-<script>
-/******** CONFIG ********/
-const LIFF_ID = "2008686694-bLB6mwvm";
-const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbz8HitBlxjIy6mQRor-4W1ZORGrj7KXWWsvUfLOCD9wGf8ujlksnzIbgG-rbplLOTSkSA/exec";
-/************************/
-
-async function start() {
-  await liff.init({ liffId: LIFF_ID });
-
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
-  }
-
-  const profile = await liff.getProfile();
-  const lineUserId = profile.userId;
-
-  // ส่ง lineUserId ไปตรวจสอบที่ GAS
-  window.location.href =
-    GAS_URL + "?lineUserId=" + encodeURIComponent(lineUserId);
-}
-
-start();
-</script>
+<p style="margin-top:40px;color:#888;font-size:13px;">
+(แนะนำสำหรับการใช้งานครั้งแรก)
+</p>
 
 </body>
 </html>
