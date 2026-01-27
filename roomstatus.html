@@ -1,35 +1,69 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>เปิดในเบราว์เซอร์</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>เปิดใช้งานระบบจอง</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      background: #f9f9f9;
+    }
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 420px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,.1);
+    }
+    h2 {
+      color: #d32f2f;
+    }
+    .btn {
+      display: block;
+      margin-top: 20px;
+      padding: 14px;
+      background: #1976d2;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .note {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
 </head>
-<body style="font-family:sans-serif;text-align:center;padding-top:80px;">
+<body>
 
-<h2>เพื่อการใช้งานที่เสถียร</h2>
-<p>กรุณาเปิดผ่าน Safari / Chrome</p>
+<div class="box">
+  <h2>⚠️ กรุณาเปิดด้วยเบราเซอร์</h2>
 
-<a
-  href="https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=roomstatus_user"
-  target="_blank"
-  style="
-    display:inline-block;
-    margin-top:30px;
-    padding:14px 22px;
-    background:#1e88e5;
-    color:#fff;
-    text-decoration:none;
-    border-radius:8px;
-    font-size:16px;
-  "
->
-🚀 เปิดในเบราว์เซอร์
-</a>
+  <p>
+    ระบบไม่รองรับการใช้งานผ่าน<br>
+    <b>เบราเซอร์ของ LINE</b>
+  </p>
 
-<p style="margin-top:40px;color:#888;font-size:13px;">
-(แนะนำสำหรับการใช้งานครั้งแรก)
-</p>
+  <p>
+    👉 กด <b>⋮ มุมขวาบน</b><br>
+    👉 เลือก <b>เปิดใน Chrome / Safari</b>
+  </p>
+
+  <a class="btn"
+     href="https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf#view=roomstatus_user">
+     เปิดระบบจอง
+  </a>
+
+  <div class="note">
+    หากเปิดผ่าน LINE จะเกิดปัญหา Sync Token
+  </div>
+</div>
 
 </body>
 </html>
+
