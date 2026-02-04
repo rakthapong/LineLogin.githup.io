@@ -19,10 +19,12 @@
   const profile = await liff.getProfile();
   const lineUserId = profile.userId;
 
-  location.href =
+  const appUrl =
     "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf" +
     "#view=payment_user" +
-    "&userSettings.lineUserId=" + lineUserId;
+    "&userSettings.lineUserId=" + encodeURIComponent(lineUserId);
+
+  location.replace(appUrl);
 })();
 </script>
 </body>
