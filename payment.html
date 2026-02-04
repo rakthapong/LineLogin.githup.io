@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>กำลังเข้าสู่ระบบ...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+
+<body>
+
+<h3>🔐 กำลังเข้าสู่ระบบแจ้งชำระเงิน...</h3>
+<p>กรุณารอสักครู่</p>
+
+<script>
+  const LIFF_ID = "2008686694-OpwZLHkl";
+
+  const APP_ID =
+    "1e844dd1-1d99-431f-909c-eb52684f5ccf";
+
+  const VIEW_NAME = "payment_user";
+
+  async function main() {
+    try {
+      await liff.init({ liffId: LIFF_ID });
+
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+
+      const profile = await liff.getProfile();
+      const lineUserId = profile.userId;
+
+      if (!lineUserId) {
+        alert("ไม่พบ LINE UserId");
+        return;
+      }
+
+      const url =
+        "https://www.appsheet.com/start/" + APP_ID +
+        "?userSettings.lineUserId=" + encodeURIComponent(lineUserId) +
+        "#view=" + VIEW_NAME;
+
+      location.replace(url);
+
+    } catch (err) {
+      document.body.innerHTML =
+        "<h3 style='color:red'>เกิดข้อผิดพลาด</h3>" +
+        "<pre>" + err + "</pre>";
+    }
+  }
+
+  main();
+</script>
+
+</body>
+</html>
