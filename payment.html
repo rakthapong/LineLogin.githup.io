@@ -9,23 +9,36 @@
 กำลังเข้าสู่ระบบแจ้งชำระเงิน...
 <script>
 (async () => {
-  await liff.init({ liffId: "2008686694-OpwZLHkl" });
+  try {
+    await liff.init({ liffId: "2008686694-OpwZLHkl" });
 
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
+    }
+
+    const profile = await liff.getProfile();
+
+    // 🔒 ป้องกันค่า userId ผิดปกติ
+    if (!profile || !profile.userId || !profile.userId.startsWith("U")) {
+      alert("ไม่สามารถดึง LINE UserID ได้ กรุณาเปิดจาก LINE เท่านั้น");
+      return;
+    }
+
+    const lineUserId = profile.userId;
+
+    const appUrl =
+      "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf" +
+      "?view=payment_user" + encodeURIComponent(lineUserId) +
+      "&_ts=" + Date.now(); // กัน cache
+
+    window.location.replace(appUrl);
+
+  } catch (err) {
+    console.error(err);
+    alert("เกิดข้อผิดพลาดในการเข้าสู่ระบบ LINE");
   }
-
-  const profile = await liff.getProfile();
-  const lineUserId = profile.userId;
-
-  const appUrl =
-    "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf" +
-    "?userSettings.lineUserId=" + encodeURIComponent(lineUserId);
-
-  window.location.replace(appUrl);
 })();
 </script>
 </body>
 </html>
-
