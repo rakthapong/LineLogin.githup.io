@@ -21,11 +21,12 @@
 
   const appUrl =
     "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf" +
-    "#view=payment_user" +
+    "?view=payment_user" +
     "&userSettings.lineUserId=" + encodeURIComponent(lineUserId);
 
-  location.replace(appUrl);
+  window.location.href = appUrl;
 })();
 </script>
 </body>
 </html>
+
