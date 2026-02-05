@@ -22,7 +22,7 @@
   const appUrl =
     "https://www.appsheet.com/start/1e844dd1-1d99-431f-909c-eb52684f5ccf" +
     "?view=payment_user" +
-    "&userSettings.lineUserId=" + encodeURIComponent(lineUserId);
+    "&USERSETTINGS(lineUserId)=" + encodeURIComponent(lineUserId);
 
   window.location.href = appUrl;
 })();
