@@ -2,28 +2,96 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>เข้าสู่ระบบ</title>
+  <title>เข้าสู่ระบบ - The Golden Lotus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body style="text-align:center;padding-top:120px;font-family:sans-serif;">
+<body style="margin:0;font-family:sans-serif;background:#f2f4f7;">
 
-<h2>เข้าสู่ระบบ</h2>
+<div style="
+  max-width:480px;
+  margin:80px auto;
+  background:white;
+  padding:40px 30px;
+  border-radius:16px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  text-align:center;
+">
 
-<input
-  id="idCard"
-  type="text"
-  maxlength="13"
-  placeholder="กรอกเลขบัตรประชาชน 13 หลัก"
-  style="font-size:16px;padding:10px;width:260px;"
-/>
+  <img src="fsimage.png"
+       alt="The Golden Lotus"
+       style="width:220px;margin-bottom:20px;">
 
-<br><br>
+  <h2 style="margin-bottom:10px;color:#1e3553;">
+    เข้าสู่ระบบจองออนไลน์
+  </h2>
 
-<button onclick="loginWithLine()"
-  style="font-size:18px;padding:14px 26px;">
-  🔐 Login with LINE
-</button>
+  <p style="color:#555;font-size:14px;line-height:1.6;">
+    กรุณากรอก <b>เลขบัตรประชาชน</b> เพื่อยืนยันตัวตนก่อนเข้าสู่ระบบผ่าน LINE
+  </p>
+
+  <div style="
+      background:#f9fafc;
+      border:1px solid #e3e6ea;
+      border-radius:10px;
+      padding:15px;
+      margin:20px 0;
+      text-align:left;
+      font-size:13px;
+      color:#444;
+  ">
+    <b style="color:#1e3553;">เงื่อนไขการกรอกข้อมูล</b>
+    <ul style="margin:8px 0 0 18px;padding:0;">
+      <li>ต้องกรอกให้ครบ <b>13 หลัก</b></li>
+      <li>กรอกเป็น <b>ตัวเลขเท่านั้น</b></li>
+      <li>ไม่ต้องเว้นวรรคหรือใส่เครื่องหมายขีด (-)</li>
+    </ul>
+  </div>
+
+  <input
+    id="idCard"
+    type="text"
+    maxlength="13"
+    placeholder="กรอกเลขบัตรประชาชน 13 หลัก"
+    style="
+      font-size:16px;
+      padding:12px;
+      width:100%;
+      border-radius:10px;
+      border:1px solid #ccc;
+      outline:none;
+      transition:0.3s;
+    "
+    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+    onfocus="this.style.borderColor='#06C755'"
+    onblur="this.style.borderColor='#ccc'"
+  />
+
+  <br><br>
+
+  <button onclick="loginWithLine()"
+    style="
+      font-size:18px;
+      padding:14px;
+      background:#06C755;
+      color:white;
+      border:none;
+      border-radius:10px;
+      width:100%;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.2s;
+    "
+    onmouseover="this.style.opacity='0.9'"
+    onmouseout="this.style.opacity='1'">
+    เข้าสู่ระบบด้วย LINE
+  </button>
+
+  <p style="font-size:12px;color:#777;margin-top:20px;">
+    🔒 ข้อมูลของท่านจะถูกใช้เพื่อยืนยันตัวตนเท่านั้น และจะไม่ถูกเผยแพร่แก่บุคคลภายนอก
+  </p>
+
+</div>
 
 <script>
 const LINE_CHANNEL_ID = "2008686694";
@@ -33,9 +101,8 @@ const GAS_URL =
 function loginWithLine() {
   const idCard = document.getElementById("idCard").value.trim();
 
-  // ❌ validation
   if (!idCard || idCard.length !== 13 || isNaN(idCard)) {
-    alert("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+    alert("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก และเป็นตัวเลขเท่านั้น");
     return;
   }
 
@@ -45,7 +112,7 @@ function loginWithLine() {
     "&client_id=" + LINE_CHANNEL_ID +
     "&redirect_uri=" + encodeURIComponent(GAS_URL) +
     "&scope=profile" +
-    "&state=" + idCard;   // 🔥 ส่งเลขบัตรไปใน state
+    "&state=" + idCard;
 
   location.href = url;
 }
